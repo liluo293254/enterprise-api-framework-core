@@ -11,36 +11,8 @@
 - 🗄️ **数据库**: Prisma ORM 集成，支持 MySQL
 - 📊 **可观测性**: 结构化日志记录，支持关联 ID
 - ⚡ **TypeScript**: 完整的 TypeScript 支持，类型安全
-- 🛠️ **CLI工具**: 项目脚手架工具，快速开发
 
 ## 快速开始
-
-### 安装
-
-```bash
-npm install -g @enterprise-api-framework/core
-```
-
-### 创建新项目
-
-使用 CLI 工具创建新项目：
-
-```bash
-api-framework create my-api-project
-cd my-api-project
-npm install
-npm run dev
-```
-
-CLI 工具会引导您完成项目配置：
-- 项目名称和描述
-- 服务器端口配置
-- 数据库连接 URL
-- 其他配置选项
-
-### 手动设置
-
-如果您想手动设置项目：
 
 1. **安装依赖**:
 ```bash

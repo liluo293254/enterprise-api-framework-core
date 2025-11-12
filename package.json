@@ -4,9 +4,6 @@
   "description": "Enterprise-grade high-performance backend API development framework",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "bin": {
-    "api-framework": "./dist/cli/index.js"
-  },
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "build": "tsc",
@@ -42,16 +39,13 @@
     "@fastify/type-provider-typebox": "^3.4.0",
     "@prisma/client": "^5.7.1",
     "@sinclair/typebox": "^0.32.15",
-    "commander": "^11.1.0",
     "dotenv": "^16.3.1",
     "fastify": "^4.24.3",
-    "inquirer": "^9.2.12",
     "pino": "^8.16.2",
     "pino-pretty": "^10.2.3",
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@types/inquirer": "^9.0.3",
     "@types/json-schema": "^7.0.15",
     "@types/node": "^20.10.5",
     "@types/supertest": "^6.0.2",
