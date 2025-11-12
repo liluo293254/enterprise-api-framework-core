@@ -1,0 +1,393 @@
+openapi: 3.0.0
+info:
+  title: API Framework Template
+  version: 1.0.0
+  description: |
+    This is a template OpenAPI specification for APIs built with the Enterprise API Framework.
+    Replace this with your actual API specification.
+  contact:
+    name: API Support
+    email: support@example.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: http://localhost:3000/api/v1
+    description: Local development server
+  - url: https://api.example.com/v1
+    description: Production server
+
+tags:
+  - name: health
+    description: Health check endpoints
+  - name: users
+    description: User management endpoints
+
+paths:
+  /health:
+    get:
+      tags:
+        - health
+      summary: Health check
+      description: Returns the health status of the API
+      operationId: getHealth
+      responses:
+        '200':
+          description: API is healthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+        '503':
+          description: API is unhealthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /users:
+    get:
+      tags:
+        - users
+      summary: List users
+      description: Retrieve a list of users
+      operationId: listUsers
+      parameters:
+        - name: page
+          in: query
+          description: Page number
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          description: Number of items per page
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserListResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    post:
+      tags:
+        - users
+      summary: Create user
+      description: Create a new user
+      operationId: createUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserRequest'
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /users/{id}:
+    get:
+      tags:
+        - users
+      summary: Get user by ID
+      description: Retrieve a user by their ID
+      operationId: getUserById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: User ID
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    put:
+      tags:
+        - users
+      summary: Update user
+      description: Update an existing user
+      operationId: updateUser
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: User ID
+          schema:
+            type: integer
+            minimum: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserRequest'
+      responses:
+        '200':
+          description: User updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    delete:
+      tags:
+        - users
+      summary: Delete user
+      description: Delete a user by their ID
+      operationId: deleteUser
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: User ID
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        '204':
+          description: User deleted successfully
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    HealthResponse:
+      type: object
+      required:
+        - status
+        - timestamp
+      properties:
+        status:
+          type: string
+          enum: [healthy, unhealthy]
+          example: healthy
+        timestamp:
+          type: string
+          format: date-time
+          example: '2025-11-12T10:00:00Z'
+        uptime:
+          type: number
+          description: Server uptime in seconds
+          example: 3600
+
+    User:
+      type: object
+      required:
+        - id
+        - email
+        - name
+        - createdAt
+      properties:
+        id:
+          type: integer
+          example: 1
+        email:
+          type: string
+          format: email
+          example: user@example.com
+        name:
+          type: string
+          example: John Doe
+        createdAt:
+          type: string
+          format: date-time
+          example: '2025-11-12T10:00:00Z'
+        updatedAt:
+          type: string
+          format: date-time
+          example: '2025-11-12T10:00:00Z'
+
+    CreateUserRequest:
+      type: object
+      required:
+        - email
+        - name
+      properties:
+        email:
+          type: string
+          format: email
+          example: user@example.com
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+          example: John Doe
+
+    UpdateUserRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          example: user@example.com
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+          example: John Doe
+
+    UserResponse:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          $ref: '#/components/schemas/User'
+
+    UserListResponse:
+      type: object
+      required:
+        - data
+        - pagination
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+        pagination:
+          type: object
+          required:
+            - page
+            - limit
+            - total
+            - totalPages
+          properties:
+            page:
+              type: integer
+              example: 1
+            limit:
+              type: integer
+              example: 20
+            total:
+              type: integer
+              example: 100
+            totalPages:
+              type: integer
+              example: 5
+
+    ErrorResponse:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: object
+          required:
+            - code
+            - message
+            - timestamp
+            - requestId
+          properties:
+            code:
+              type: string
+              example: VALIDATION_ERROR
+            message:
+              type: string
+              example: Invalid input parameters
+            details:
+              type: object
+              additionalProperties: true
+            timestamp:
+              type: string
+              format: date-time
+              example: '2025-11-12T10:00:00Z'
+            requestId:
+              type: string
+              format: uuid
+              example: '550e8400-e29b-41d4-a716-446655440000'
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token authentication
+
+security:
+  - bearerAuth: []
+
